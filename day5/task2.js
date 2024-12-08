@@ -56,7 +56,6 @@ function solve(data) {
     const m = isBad(ruleArr, update);
     if (m)
       result += m;
-
   }
 
   return result;
