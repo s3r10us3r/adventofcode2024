@@ -1,0 +1,84 @@
+import fs from 'node:fs';
+
+function readData(path) {
+  let data = fs.readFileSync(path, { encoding: 'utf8' });
+  data = data.split('\n').filter(l => l);
+  return data;
+}
+
+const seen = new Set();
+let maxY;
+let maxX;
+function floodBase(y, x, data) {
+  const cr = data[y][x];
+  const sides = new Set();
+  let area = 0;
+  let minX = maxX;
+  let mxX = 0;
+  let minY = maxY;
+  let mxY = 0;
+  const incArea = () => area++;
+  const notify = (y, x) => {
+    minX = Math.min(minX, x);
+    mxX = Math.max(mxX, x);
+    minX = Math.min(minY, y);
+    mxX = Math.max(mxY, y);
+
+    sides.add(key(y, x))
+  };
+  flood(y, x, cr, data, incArea, notify);
+  return per * area;
+}
+
+function key(y, x) {
+  return `${y},${x}`;
+}
+
+function revKey(key) {
+  return key.split(',').map(n => parseInt(n));
+}
+
+function flood(y, x, cr, data, ia, not) {
+  ia();
+  seen.add(key(y, x));
+  const dirs = [[y - 1, x], [y + 1, x], [y, x - 1], [y, x + 1]];
+  let isSide = false;
+  for (const dir of dirs) {
+    let ty = dir[0];
+    let tx = dir[1];
+    if (ty < 0 || ty >= maxY || tx < 0 || tx >= maxX || data[ty][tx] !== cr) {
+      not(ty, tx);
+    } else if (!seen.has(key(ty, tx))) {
+      flood(ty, tx, cr, data, ia, not);
+    }
+  }
+}
+
+function calcSides(sides) {
+  while (sides.size() > 0) {
+    const val = revKey(sides.values().next().value);
+    const y = val[0];
+    const x = val[1];
+
+
+  }
+}
+
+function solve(data) {
+  let sum = 0;
+  maxY = data.length;
+  maxX = data[0].length;
+  for (let y = 0; y < maxY; y++) {
+    for (let x = 0; x < maxX; x++) {
+      if (seen.has(key(y, x))) {
+        continue;
+      }
+      sum += floodBase(y, x, data);
+    }
+  }
+  return sum;
+}
+
+const data = readData('data')
+const solution = solve(data);
+console.log(solution);
