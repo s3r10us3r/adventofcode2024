@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+
+function readData(path) {
+  let data = fs.readFileSync(path, { encoding: 'utf8' });
+  data = data.split('\n').map(l => l.split(' ').map(s => s.split('=')));//[1].split(',').map(n => parseInt(n))));
+  return data;
+}
+
+function solve(data) {
+  console.log(data);
+}
+
+const data = readData('test')
+const solution = solve(data);
+console.log(solution);
